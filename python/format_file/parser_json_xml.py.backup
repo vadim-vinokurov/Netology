@@ -1,0 +1,67 @@
+import xml.etree.ElementTree as ET
+import json
+from itertools import groupby
+path_json = '/Users/Vadim/Documents/netology/python/format_file/newsafr.json'
+path_xml = '/Users/Vadim/Documents/netology/python/format_file/newsafr.xml'
+
+class Parser:
+
+    def __init__(self, file_name, count_pars, count_words):
+        self.file_name = file_name # Имя файла
+        self.count_pars = count_pars # Количество выводимого результат
+        self.count_words = count_words #Минимальное количество букв в слове
+       # self.count_pars +=1 Это сделал для того что б подсчет количества слов начинался с 1, а не с 0
+        self.count_words -= 1
+    def pars_json(self):
+        title_json = []
+        t_json = list()
+        s_json = list()
+        with open(self.file_name, encoding='utf-8') as file:
+            text_json = json.load(file)
+            a = text_json['rss']['channel']
+            for x in a['items']:
+                titles = x['title'].lower()
+                for x in titles.split():
+                    title_json.append(x) if len(x) > self.count_words else 0
+        for x in title_json:
+            d = {x: title_json.count(x)}
+            list_keys = list(d.keys())
+            list_keys.sort()
+            for i in list_keys:
+                s_json.append([d[i], i])
+        for x in s_json:
+            s_json.sort(reverse=True)
+            t_json.append(x)
+        result = [element for element, _ in groupby(t_json)]
+        return result[1:self.count_pars]
+
+    def pars_xml(self):
+        title_xml = []
+        t_xml = list()
+        s_xml = list()
+        news_xml = []
+        tree = ET.parse(path_xml)
+        root = tree.getroot()
+        for i in root.iter('title'):
+            news_xml.append(i.text)
+        for x in news_xml:
+            titles = x.lower()
+            for x in titles.split():
+                title_xml.append(x) if len(x) > self.count_words else 0
+        for x in title_xml:
+            d = {x: title_xml.count(x)}
+            list_keys = list(d.keys())
+            list_keys.sort()
+            for i in list_keys:
+                s_xml.append([d[i], i])
+        for x in s_xml:
+            s_xml.sort(reverse=True)
+            t_xml.append(x)
+        result = [element for element, _ in groupby(t_xml)]
+        return result[1:self.count_pars]
+
+file_json = Parser(path_json,10, 4)
+print(f'json - {file_json.pars_json()}\n')
+
+file_xml = Parser(path_xml,10, 8)
+print(f'xml - {file_xml.pars_xml()}')
