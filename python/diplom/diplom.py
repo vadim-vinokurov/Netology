@@ -28,9 +28,12 @@ class User:
         self.params['user_id'] = self.get_user()
         self.params['extended'] = 1
         self.params['fields'] = 'links'
-        r = requests.get(self.URL+method, self.params).json()
-        for name_group in r['response']['items']:
-            list_groups.append(name_group['id'])
+        try:
+            r = requests.get(self.URL+method, self.params).json()
+            for name_group in r['response']['items']:
+                list_groups.append(name_group['id'])
+        except Exception as e:
+            print(e)
         return list_groups
 
     def get_friends(self):
@@ -38,8 +41,11 @@ class User:
         list_id_friends = []
         method = 'friends.get?'
         self.params['user_id'] = self.get_user()
-        r = requests.get(self.URL+method, self.params).json()
-        list_id_friends.append(r['response']['items'])
+        try:
+            r = requests.get(self.URL+method, self.params).json()
+            list_id_friends.append(r['response']['items'])
+        except Exception as e:
+            print(e)
         return list_id_friends
 
     def get_groups_friends(self):
@@ -57,11 +63,12 @@ class User:
             try:
                 r = requests.get(self.URL + method, self.params).json()
                 print('.', end='')
-                if 'error' in r and 'error_code' in r['error'] and r['error']['error_code'] == 6:
-                    sleep(2)
                 t[self.params['user_id']] = r['response']['items']
+                sleep(2)
             except Exception as e:
-                er.append(e)
+                if ('response' in r) or ('error' in r and 'error_code' in r['error'] and r['error']['error_code'] == 6):
+                    print(e) # ЕСЛИ ВОЗНИКАЕТ ИСКЛЮЧЕНИЕ УВЕЛИЧИВАЕМ sleep()
+
         for m in t.values():
             for h in m:
                 groups_friends.append(h)
