@@ -1,60 +1,51 @@
-from pprint import pprint
-
 class Contact:
 
-    list_rows = ['Имя', 'Фамилия', 'Телефон', 'В избранных']
-    list_args = []
-    dict_args = {}
-
     def __init__(self, *args, **kwargs):
-        self.args = args
+
+        self.args = list(args)
         self.kwargs = kwargs
+        self.list_keys = ['Имя', 'Фамилия', 'Телефон', 'В избранных']
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        [Contact.list_args.append(x) for x in self.args]
+    def __str__(self):
         try:
-            [Contact.dict_args.update({k[0::]: self.args[i]}) for i, k in enumerate(Contact.list_rows)]
-        except Exception:
-            if 'В избранных' not in Contact.dict_args:
-                Contact.dict_args.update({'В избранных':'Нет'})
-
-
-        return f"""
-{Contact.dict_args}
-Дополнительная информация:
-        {self.kwargs}
-"""
+            self.dataDict = dict(zip(self.list_keys, self.args))
+            data = {**self.dataDict, **self.kwargs}
+            if 'В избранных' not in data:
+                data['В избранных'] = 'Нет'
+        except Exception as e:
+            print(e)
+        return str(data).replace(',', '\n').replace('{', '').replace('}', '').replace("'", "")
 
 
 class PhoneBook(Contact):
 
     def __init__(self, *args, **kwargs):
-        # self.name = name
+        self.args = args
+        self.kwargs = kwargs
         super().__init__(args, kwargs)
 
-    def get_contact(self):
-        book = Contact.dict_args
-        return book
+    def listingContacts(self, start, end, **l):
+        start = start - 1
+        while start < end:
+            yield l
+            start += 1
 
-    def add_contact(self):
+    def addNewContact(self):
         pass
 
-    def del_contact(self):
+    def deleteContactByPhoneNumber(self):
         pass
 
-    def search_favorite_contact(self):
+    def searchAllFavoriteNumbers(self):
         pass
 
-    def search_contact(self):
+    def searchForContactFirstAndLastName(self):
         pass
+
 
 
 
 if __name__ == '__main__':
+
     jhon = Contact('Jhon', 'Smith', '+71234567809',telegram='@jhony', email='jhony@smith.com')
-    print(next(jhon).replace(',','\n').replace("'","").replace('{','').replace('}',''))
-    c = PhoneBook.get_contact()
-    print(c)
+    print(jhon)
