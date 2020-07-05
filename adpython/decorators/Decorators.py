@@ -1,10 +1,16 @@
 import requests
 import json
 import time
+import os
+path=os.getcwd()
 
-pathToLog = '/Users/Vadim/Documents/netology/adpython/Decorators/logs/'
 def logger(log):
     def wrapper():
+        try:
+            if not os.path.isdir('logs'):
+                os.mkdir('logs')
+        except Exception:
+            pass
         params = {
             'Дата': time.strftime('%d.%m.%Y'),
             'Время': time.strftime('%H.%M'),
@@ -12,9 +18,8 @@ def logger(log):
             'Аргументы':user,
             'Результат':log(user)
         }
-        with open(pathToLog+'log.txt', 'a') as file:
+        with open(path+'/logs/log.txt', 'a') as file:
             file.write(json.dumps(params, sort_keys=True, indent=4, ensure_ascii=False, separators=(',', ':')))
-
     return wrapper
 
 @logger
@@ -33,5 +38,6 @@ def get_user(user):
 user = input('Введите имя пользователя: ')
 try:
     get_user()
-except Exception:
-    print('НЕ ВЕРНОЕ ИМЯ ПОЛЬЗОВАТЕЛЯ')
+except Exception as e:
+    print(e)
+
