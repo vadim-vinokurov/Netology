@@ -1,6 +1,5 @@
 import requests
 import json
-from pprint import pprint
 from time import sleep
 
 
@@ -92,7 +91,7 @@ class User:
         for d in v:
             f.append({i: d[i] for i in d if i ==
                       'screen_name' or i == 'id' or i == 'members_count'})
-        with open('list.json', 'a') as file:
+        with open('list.json', 'w') as file:
             file.write(json.dumps(f, sort_keys=True, indent=4,
                                   ensure_ascii=False, separators=(',', ':')))
 
@@ -104,7 +103,3 @@ if __name__ == '__main__':
         user.get_dict_groups()
     except Exception:
         print('Не верно введен ID/user_name пользователя')
-
-
-# 171691064
-# eshmargunov
