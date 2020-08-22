@@ -1,0 +1,33 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+  <div class="container">
+    <div class="section">
+
+      <h3>Спасибо, что посетили наш сайт!</h3>
+<p>
+<h3>from-landing</h3>
+  <a href="{% url "index" %}?from-landing=original" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">
+      Оригинал</a>
+  <a href="{% url "index" %}?from-landing=test" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">
+      Тест</a>
+
+</p>
+        <p>
+            <h3>ab-test-arg</h3>
+  <a href="{% url "landing" %}?ab-test-arg=original" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">
+      Оригинал</a>
+  <a href="{% url "landing" %}?ab-test-arg=test" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">
+      Тест</a>
+</p>
+        <p>
+            <a href="{% url "stats" %}" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">
+      Статистика</a>
+        </p>
+    </div>
+  </div>
+{% endblock %}
